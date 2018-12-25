@@ -7,28 +7,28 @@
         android:title="@string/action_today"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_call">
+        android:icon="@android:drawable/ic_menu_today">
     </item>
     <item
         android:id="@+id/action_task"
         android:title="@string/action_task"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_call">
+        android:icon="@android:drawable/ic_menu_manage">
     </item>
     <item
         android:id="@+id/action_gather"
         android:title="@string/action_gather"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_call">
+        android:icon="@android:drawable/ic_lock_idle_alarm">
     </item>
     <item
         android:id="@+id/action_record"
         android:title="@string/action_record"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_call">
+        android:icon="@drawable/tag">
     </item>
 
 </menu>
