@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_today"
+        android:title="@string/action_today"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_call">
+    </item>
+    <item
+        android:id="@+id/action_task"
+        android:title="@string/action_task"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_call">
+    </item>
+    <item
+        android:id="@+id/action_gather"
+        android:title="@string/action_gather"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_call">
+    </item>
+    <item
+        android:id="@+id/action_record"
+        android:title="@string/action_record"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_call">
+    </item>
+
+</menu>
