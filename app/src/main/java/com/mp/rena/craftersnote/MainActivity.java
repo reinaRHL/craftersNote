@@ -3,6 +3,9 @@ package com.mp.rena.craftersnote;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,10 +18,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,8 +41,46 @@ public class MainActivity extends AppCompatActivity {
     private String userName="";
     private String serverName="";
     TextView profileText;
+    ImageView profilePicImageView;
     SharedPreferences sharedPreferences;
+    private final String appkey = "3e1f649be24c4f8bb33b9a42";
 
+
+    public class DownloadProfilePicture extends AsyncTask<String, Void, Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+
+            try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection connection= null;
+                connection = (HttpURLConnection) url.openConnection();
+                InputStream in = connection.getInputStream();
+                InputStreamReader reader = new InputStreamReader(in);
+                String result = "";
+                int data = reader.read();
+                while (data != -1){
+                    char current = (char) data;
+                    result += current;
+                    data = reader.read();
+                }
+
+                JSONObject profileJsonAll = new JSONObject(result);
+                String resultString = profileJsonAll.getString("Results");
+                JSONArray arr = new JSONArray(resultString);
+                JSONObject profileJson = arr.getJSONObject(0);
+                String imageURL = profileJson.getString("Avatar");
+                URL urlImage = new URL(imageURL);
+                connection = (HttpURLConnection) urlImage.openConnection();
+                in = connection.getInputStream();
+                Bitmap image = BitmapFactory.decodeStream(in);
+                return image;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,10 +110,21 @@ public class MainActivity extends AppCompatActivity {
         profileText = findViewById(R.id.profileTextView);
         userName = sharedPreferences.getString("userName", "");
         serverName = sharedPreferences.getString("serverName", "");
-        profileText.setText ("Hello, " + userName + "!");
+        profileText.setText ("Hello!");
 
+        profilePicImageView = findViewById(R.id.profilePicture);
         if (isProfileComplete()){
             //download profile picture
+            profileText.setText ("Hello, " + userName + "!");
+            String [] nameSplited = userName.split("\\s+");
+            DownloadProfilePicture dpp = new DownloadProfilePicture();
+            try {
+                Bitmap image = dpp.execute("https://xivapi.com/character/search?name="+ nameSplited[0] + "+" + nameSplited[1] + "&server="+ serverName + "&key=" + appkey).get();
+                profilePicImageView.setImageBitmap(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else{
             setProfile();
         }
