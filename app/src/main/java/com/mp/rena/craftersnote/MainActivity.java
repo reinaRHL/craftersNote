@@ -22,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -46,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private final String appkey = "3e1f649be24c4f8bb33b9a42";
 
 
-    public class DownloadProfilePicture extends AsyncTask<String, Void, Bitmap>{
+    public class DownloadProfilePicture extends AsyncTask <String, Void, String>{
 
         @Override
-        protected Bitmap doInBackground(String... strings) {
+        protected String doInBackground(String... strings) {
 
             try {
                 URL url = new URL(strings[0]);
@@ -70,11 +73,9 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray arr = new JSONArray(resultString);
                 JSONObject profileJson = arr.getJSONObject(0);
                 String imageURL = profileJson.getString("Avatar");
-                URL urlImage = new URL(imageURL);
-                connection = (HttpURLConnection) urlImage.openConnection();
-                in = connection.getInputStream();
-                Bitmap image = BitmapFactory.decodeStream(in);
-                return image;
+
+                return imageURL;
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,8 +120,13 @@ public class MainActivity extends AppCompatActivity {
             String [] nameSplited = userName.split("\\s+");
             DownloadProfilePicture dpp = new DownloadProfilePicture();
             try {
-                Bitmap image = dpp.execute("https://xivapi.com/character/search?name="+ nameSplited[0] + "+" + nameSplited[1] + "&server="+ serverName + "&key=" + appkey).get();
-                profilePicImageView.setImageBitmap(image);
+                String imageURL = dpp.execute("https://xivapi.com/character/search?name="+ nameSplited[0] + "+" + nameSplited[1] + "&server="+ serverName + "&key=" + appkey).get();
+                Glide.with(MainActivity.this)
+                        .load(imageURL)
+                        .apply(RequestOptions.placeholderOf(R.drawable.ic_person_black_24dp))
+                        .apply(RequestOptions.overrideOf(200, 200))
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(profilePicImageView);
             } catch (Exception e) {
                 e.printStackTrace();
             }
