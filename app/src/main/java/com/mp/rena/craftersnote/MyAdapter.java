@@ -11,11 +11,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +38,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         this.list = list;
         this.context = context;
     }
+
+    public boolean isTodayFragment() {
+        FragmentManager m = ((AppCompatActivity) context).getSupportFragmentManager();
+        Fragment fragment = m.findFragmentByTag("0");
+        if (fragment != null && fragment.isVisible()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isEveryFragment() {
+        FragmentManager m = ((AppCompatActivity) context).getSupportFragmentManager();
+        Fragment fragment = m.findFragmentByTag("1");
+        if (fragment != null && fragment.isVisible()) {
+            return true;
+        }
+        return false;
+    }
+
 
     public boolean isSearchFragment() {
         FragmentManager m = ((AppCompatActivity) context).getSupportFragmentManager();
@@ -95,46 +118,78 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     }
                 }
             });
-        }
+            holder.detailBtn.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder;
+                    final AlertDialog alertDialog;
+                    LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View layout = inflater.inflate(R.layout.dialog_custom_layout, null);
+                    builder = new AlertDialog.Builder(context);
+                    builder.setView(layout);
+                    alertDialog = builder.create();
+                    ArrayList<String> materialList = new ArrayList<>();
+                    materialList.add("1");
+                    ListView listView = layout.findViewById(R.id.requiredMaterialDetail);
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(layout.getContext(),android.R.layout.simple_list_item_1, materialList);
+                    listView.setAdapter(arrayAdapter);
+                    ImageButton closeBtn = layout.findViewById(R.id.closeDialog);
+                    closeBtn.setOnClickListener(new Button.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }
+            });
 
-        //many other things such as what happens when I click it? long click it? etc
-        holder.textView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+        } else {
+            holder.textView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
 
+                    if (isTodayFragment()){
+                        new AlertDialog.Builder(context)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Are you sure?")
+                                .setMessage("Are you sure to delete this item from the list?")
+                                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //MainActivity.db.execSQL("DELETE FROM Place WHERE lat =\'" + MainActivity.data.get(position).lat + "\' and lng = \'" + MainActivity.data.get(position).lng + "\' and address = \'" + MainActivity.data.get(position).address + "\';");
 
-//                Fragment fragment = ((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("0");
-//                if (fragment != null && fragment.isVisible())
-//                    //if current fragment is Todays' task, do something..etc
-//                    Toast.makeText(context, "test1", Toast.LENGTH_SHORT).show();
-//                    TodaysTask.list.remove(position);
-//                    TodaysTask.adapter.notifyDataSetChanged();
-//                }
-//                fragment = ((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("1");
-//                if (fragment != null && fragment.isVisible()) {
-//                    Toast.makeText(context, "test2", Toast.LENGTH_SHORT).show();
-//                } // add more cases and behaviour after adding the data
-//
-//                // give delete alert
-//                new AlertDialog.Builder(context)
-//                        .setIcon(android.R.drawable.ic_dialog_alert)
-//                        .setTitle("Are you sure?")
-//                        .setMessage("Are you sure to delete this item from the list?")
-//                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                //MainActivity.db.execSQL("DELETE FROM Place WHERE lat =\'" + MainActivity.data.get(position).lat + "\' and lng = \'" + MainActivity.data.get(position).lng + "\' and address = \'" + MainActivity.data.get(position).address + "\';");
-//
-//                                TodaysTask.list.remove(position);
-//                                TodaysTask.adapter.notifyDataSetChanged();
-//                            }
-//                        })
-//                        .setNegativeButton("No", null)
-//                        .show();
-                return true;
+                                        TodaysTask.list.remove(position);
+                                        TodaysTask.adapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                        return true;
+
+                    } else if (isEveryFragment()){
+                        new AlertDialog.Builder(context)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Are you sure?")
+                                .setMessage("Are you sure to delete this item from the list?")
+                                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //MainActivity.db.execSQL("DELETE FROM Place WHERE lat =\'" + MainActivity.data.get(position).lat + "\' and lng = \'" + MainActivity.data.get(position).lng + "\' and address = \'" + MainActivity.data.get(position).address + "\';");
+
+                                        ManageTask.list.remove(position);
+                                        ManageTask.adapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             }
-        });
-    }
+        }
 
     @Override
     public int getItemCount() {
@@ -145,15 +200,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         TextView textView;
         Button todayBtn;
         Button everydayBtn;
+        Button detailBtn;
         ImageView itemIcon;
+
 
         public MyViewHolder(ViewGroup itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.rowTextView);
 
-            if (MyAdapter.isSearch) {
+            if (isSearch) {
                 todayBtn = itemView.findViewById(R.id.addTodayBtn);
                 everydayBtn = itemView.findViewById(R.id.addEverydayBtn);
+                detailBtn = itemView.findViewById(R.id.detailBtn);
                 itemIcon = itemView.findViewById(R.id.itemIcon_search);
             } else{
                 itemIcon = itemView.findViewById(R.id.itemIcon);
