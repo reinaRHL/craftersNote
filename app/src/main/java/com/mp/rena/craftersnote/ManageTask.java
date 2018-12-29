@@ -24,17 +24,15 @@ public class ManageTask extends Fragment {
         // Required empty public constructor
     }
 
-    static ArrayList<String> list = new ArrayList<>();;
+    static ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
     static MyAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
 
-        list.add("2");
         // Inflate the layout for this fragment
         View rootView =inflater.inflate(R.layout.fragment_manage_task, container, false);
 

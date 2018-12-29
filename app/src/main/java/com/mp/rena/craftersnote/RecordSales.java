@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class RecordSales extends Fragment {
 
 
-    static ArrayList<String> list = new ArrayList<>();;
+    static ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
     static MyAdapter adapter;
 
@@ -32,7 +32,7 @@ public class RecordSales extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        list.add("4");
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_record_sales, container, false);
 

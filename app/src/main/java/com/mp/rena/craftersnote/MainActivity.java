@@ -130,7 +130,11 @@ public class MainActivity extends AppCompatActivity {
         // initial screen with todaysTask
         fragmentManager = getSupportFragmentManager();
         TodaysTask fragment = new TodaysTask();
-        final FragmentTransaction transaction = fragmentManager.beginTransaction();
+        ManageTask manageF = new ManageTask();
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.main_container, manageF, "1").commit();
+        transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_container, fragment, "0").commit();
 
 

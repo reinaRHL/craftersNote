@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class ManageGather extends Fragment {
 
-    static ArrayList<String> list = new ArrayList<>();;
+    static ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
     static MyAdapter adapter;
 
@@ -32,8 +32,6 @@ public class ManageGather extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-
-        list.add("3");
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_manage_gather, container, false);
 
@@ -48,7 +46,6 @@ public class ManageGather extends Fragment {
         rv.addItemDecoration(divider);
 
         return rootView;
-
     }
 
 }

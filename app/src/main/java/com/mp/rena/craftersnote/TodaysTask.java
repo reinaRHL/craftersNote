@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class TodaysTask extends Fragment {
 
-    static ArrayList<String> list = new ArrayList<>();;
+    static ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
     static MyAdapter adapter;
 
@@ -32,7 +32,7 @@ public class TodaysTask extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        list.add("1");
+
         // Inflate the layout for this fragment
         View rootView =inflater.inflate(R.layout.fragment_todays_task, container, false);
 

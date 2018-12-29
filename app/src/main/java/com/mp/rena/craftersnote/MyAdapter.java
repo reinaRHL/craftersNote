@@ -20,11 +20,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private ArrayList<String> list;
+    private ArrayList<Item> list;
     private Context context;
     static Boolean isSearch = false;
 
-    public MyAdapter(Context context, ArrayList<String> list) {
+    public MyAdapter(Context context, ArrayList<Item> list) {
         this.list = list;
         this.context = context;
     }
@@ -56,19 +56,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        holder.textView.setText(list.get(position));
+        holder.textView.setText(list.get(position).name);
 
         if (isSearch){
             holder.todayBtn.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "testtt", Toast.LENGTH_SHORT).show();
+                    Item item = list.get(position);
+                    if (!TodaysTask.list.contains(item)){
+                        TodaysTask.list.add(item);
+                        TodaysTask.adapter.notifyDataSetChanged();
+                    }
                 }
             });
             holder.everydayBtn.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "testtt2", Toast.LENGTH_SHORT).show();
+                    Item item = list.get(position);
+                    if (!TodaysTask.list.contains(item)){
+                        TodaysTask.list.add(item);
+                        TodaysTask.adapter.notifyDataSetChanged();
+                    }
+                    if (!ManageTask.list.contains(item)){
+                        ManageTask.list.add(item);
+                        ManageTask.adapter.notifyDataSetChanged();
+                    }
                 }
             });
         }
