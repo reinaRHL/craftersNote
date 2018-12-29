@@ -84,7 +84,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.textView.setText(list.get(position).name);
         Glide.with(context)
                 .load(R.drawable.item_020001)
@@ -133,6 +133,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     ListView listView = layout.findViewById(R.id.requiredMaterialDetail);
                     ArrayAdapter arrayAdapter = new ArrayAdapter(layout.getContext(),android.R.layout.simple_list_item_1, materialList);
                     listView.setAdapter(arrayAdapter);
+                    Button todayDBtn = layout.findViewById(R.id.addTodayDialog);
+                    Button everyDBtn = layout.findViewById(R.id.addEverydayDialog);
+                    todayDBtn.setOnClickListener(new Button.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            holder.todayBtn.performClick();
+                        }
+                    });
+                    everyDBtn.setOnClickListener(new Button.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            holder.everydayBtn.performClick();
+                        }
+                    });
                     ImageButton closeBtn = layout.findViewById(R.id.closeDialog);
                     closeBtn.setOnClickListener(new Button.OnClickListener() {
                         @Override
