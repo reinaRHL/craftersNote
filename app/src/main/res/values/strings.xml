@@ -5,10 +5,12 @@
     <string name="action_task">Manage Task</string>
     <string name="action_gather">Manage Gather</string>
     <string name="action_record">Record Sales</string>
+    <string name="action_search">Search Items</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="today_fragment">today Fragment</string>
-    <string name="manage_fragment">manage Fragment</string>
-    <string name="gather_fragment">gather Fragment</string>
-    <string name="record_fragment">record Fragment</string>
+    <string name="today_fragment">Today\'s Task</string>
+    <string name="manage_fragment">Manage Everyday Task</string>
+    <string name="gather_fragment">Set gathering item notification</string>
+    <string name="record_fragment">Record Sales history</string>
+    <string name="search_fragment">Search Items</string>
 </resources>

@@ -1,29 +1,54 @@
 package com.mp.rena.craftersnote;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private ArrayList<String> list;
     private Context context;
+    static Boolean isSearch = false;
 
     public MyAdapter(Context context, ArrayList<String> list) {
         this.list = list;
         this.context = context;
     }
 
+    public boolean isSearchFragment() {
+        FragmentManager m = ((AppCompatActivity) context).getSupportFragmentManager();
+        Fragment fragment = m.findFragmentByTag("4");
+        if (fragment != null && fragment.isVisible()) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RelativeLayout layout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recyler_view, parent, false);
+
+        RelativeLayout layout;
+        if (isSearchFragment()) {
+            isSearch = true;
+            layout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recyler_search_view, parent, false);
+        } else {
+            isSearch = false;
+            layout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recyler_view, parent, false);
+        }
 
         MyViewHolder viewHolder = new MyViewHolder(layout);
         return viewHolder;
@@ -33,25 +58,55 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.textView.setText(list.get(position));
 
+        if (isSearch){
+            holder.todayBtn.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "testtt", Toast.LENGTH_SHORT).show();
+                }
+            });
+            holder.everydayBtn.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "testtt2", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
         //many other things such as what happens when I click it? long click it? etc
         holder.textView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                // give delete alert
-                new AlertDialog.Builder(context)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Are you sure?")
-                        .setMessage("Are you sure to delete this item from the list?")
-                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //MainActivity.db.execSQL("DELETE FROM Place WHERE lat =\'" + MainActivity.data.get(position).lat + "\' and lng = \'" + MainActivity.data.get(position).lng + "\' and address = \'" + MainActivity.data.get(position).address + "\';");
-                                TodaysTask.list.remove(position);
-                                TodaysTask.adapter.notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
+
+
+//                Fragment fragment = ((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("0");
+//                if (fragment != null && fragment.isVisible())
+//                    //if current fragment is Todays' task, do something..etc
+//                    Toast.makeText(context, "test1", Toast.LENGTH_SHORT).show();
+//                    TodaysTask.list.remove(position);
+//                    TodaysTask.adapter.notifyDataSetChanged();
+//                }
+//                fragment = ((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("1");
+//                if (fragment != null && fragment.isVisible()) {
+//                    Toast.makeText(context, "test2", Toast.LENGTH_SHORT).show();
+//                } // add more cases and behaviour after adding the data
+//
+//                // give delete alert
+//                new AlertDialog.Builder(context)
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .setTitle("Are you sure?")
+//                        .setMessage("Are you sure to delete this item from the list?")
+//                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                //MainActivity.db.execSQL("DELETE FROM Place WHERE lat =\'" + MainActivity.data.get(position).lat + "\' and lng = \'" + MainActivity.data.get(position).lng + "\' and address = \'" + MainActivity.data.get(position).address + "\';");
+//
+//                                TodaysTask.list.remove(position);
+//                                TodaysTask.adapter.notifyDataSetChanged();
+//                            }
+//                        })
+//                        .setNegativeButton("No", null)
+//                        .show();
                 return true;
             }
         });
@@ -64,10 +119,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
+        Button todayBtn;
+        Button everydayBtn;
+
         public MyViewHolder(ViewGroup itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.rowTextView);
-        }
 
+            if (MyAdapter.isSearch) {
+                todayBtn = itemView.findViewById(R.id.addTodayBtn);
+                everydayBtn = itemView.findViewById(R.id.addEverydayBtn);
+            }
+
+        }
     }
 }

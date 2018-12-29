@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView profilePicImageView;
     SharedPreferences sharedPreferences;
     private final String appkey = "3e1f649be24c4f8bb33b9a42";
+    String [] nameSplited;
 
 
     public class DownloadProfilePicture extends AsyncTask <String, Void, String>{
@@ -115,22 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         profilePicImageView = findViewById(R.id.profilePicture);
         if (isProfileComplete()){
-            //download profile picture
-            profileText.setText ("Hello, " + userName + "!");
-            String [] nameSplited = userName.split("\\s+");
-            DownloadProfilePicture dpp = new DownloadProfilePicture();
-            try {
-                String imageURL = dpp.execute("https://xivapi.com/character/search?name="+ nameSplited[0] + "+" + nameSplited[1] + "&server="+ serverName + "&key=" + appkey).get();
-                Glide.with(MainActivity.this)
-                        .load(imageURL)
-                        .apply(RequestOptions.placeholderOf(R.drawable.ic_person_black_24dp))
-                        .apply(RequestOptions.overrideOf(200, 200))
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(profilePicImageView);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            downloadProfilePic();
         } else{
             setProfile();
         }
@@ -170,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
                         RecordSales fragment4 = new RecordSales();
                         transaction.replace(R.id.main_container, fragment4, "3").commit();
                         break;
+
+                    case R.id.action_search:
+                        SearchItems fragment5 = new SearchItems();
+                        transaction.replace(R.id.main_container, fragment5, "4").commit();
+                        break;
                 }
                 return true;
             }
@@ -195,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         }
         layout.addView(editServer);
 
+        // alert box
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_menu_edit)
                 .setTitle("Profile Setting")
@@ -210,7 +204,12 @@ public class MainActivity extends AppCompatActivity {
                         sharedPreferences.edit().putString("serverName", serverName).apply();
 
                         if (isProfileComplete()){
-                            //download profile picture
+                            downloadProfilePic();
+                        } else if (userName.equals("")){
+                            profileText.setText ("Hello!");
+                            profilePicImageView.setImageBitmap(null);
+                        } else if (serverName.equals("") || nameSplited.length != 2){
+                            profilePicImageView.setImageBitmap(null);
                         }
                     }
                 })
@@ -219,9 +218,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Boolean isProfileComplete(){
-        if (userName.equals("") || serverName.equals("")){
+        nameSplited = userName.split("\\s+");
+        if (userName.equals("") || serverName.equals("") || nameSplited.length != 2){
             return false;
         }
         return true;
+    }
+
+    public void downloadProfilePic(){
+        profileText.setText ("Hello, " + userName + "!");
+        DownloadProfilePicture dpp = new DownloadProfilePicture();
+        try {
+            String imageURL = dpp.execute("https://xivapi.com/character/search?name="+ nameSplited[0] + "+" + nameSplited[1] + "&server="+ serverName + "&key=" + appkey).get();
+            Glide.with(MainActivity.this)
+                    .load(imageURL)
+                    .apply(RequestOptions.placeholderOf(new ColorDrawable(Color.BLACK)))
+                    .apply(RequestOptions.overrideOf(200, 200))
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profilePicImageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
