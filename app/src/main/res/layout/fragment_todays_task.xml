@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,6 +25,24 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/title_today"
             android:layout_margin="5dp" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="36dp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/recyclerViewToday"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_add_circle_outline_black_24dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_above="@+id/recyclerViewToday"
+            android:layout_toStartOf="@+id/imageButton"
+            android:text="Add More"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

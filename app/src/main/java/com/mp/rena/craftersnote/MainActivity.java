@@ -41,7 +41,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigation;
+    static BottomNavigationView bottomNavigation;
     private FragmentManager fragmentManager;
     private String userName="";
     private String serverName="";

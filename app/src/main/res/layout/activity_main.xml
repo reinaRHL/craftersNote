@@ -33,6 +33,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="false"
             android:background="@android:color/black"
+            android:paddingLeft="2dp"
             android:scaleType="fitCenter" />
     </LinearLayout>
 

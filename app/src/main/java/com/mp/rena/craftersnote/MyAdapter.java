@@ -2,6 +2,8 @@ package com.mp.rena.craftersnote;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -13,9 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -57,6 +63,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.textView.setText(list.get(position).name);
+        Glide.with(context)
+                .load(R.drawable.item_020001)
+                .apply(RequestOptions.placeholderOf(new ColorDrawable(Color.BLACK)))
+                .apply(RequestOptions.overrideOf(150, 150))
+                .apply(RequestOptions.circleCropTransform())
+                .into(holder.itemIcon);
 
         if (isSearch){
             holder.todayBtn.setOnClickListener(new Button.OnClickListener() {
@@ -133,6 +145,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         TextView textView;
         Button todayBtn;
         Button everydayBtn;
+        ImageView itemIcon;
 
         public MyViewHolder(ViewGroup itemView) {
             super(itemView);
@@ -141,6 +154,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             if (MyAdapter.isSearch) {
                 todayBtn = itemView.findViewById(R.id.addTodayBtn);
                 everydayBtn = itemView.findViewById(R.id.addEverydayBtn);
+                itemIcon = itemView.findViewById(R.id.itemIcon_search);
+            } else{
+                itemIcon = itemView.findViewById(R.id.itemIcon);
             }
 
         }
