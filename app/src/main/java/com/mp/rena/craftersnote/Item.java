@@ -6,14 +6,14 @@ public class Item {
 
     String name;
     int recipeID;
-    int itemID;
+    int quantity;
     String description;
     String icon;
     String url;
     String urlType;
     String job;
     String jobLevel;
-    ArrayList<Item> reqMaterialList = new ArrayList<>();
+    static ArrayList<Item> reqMaterialList = new ArrayList<>();
 
     public Item(String name, int recipeID, String icon, String url, String urlType) {
         this.name = name;
@@ -43,5 +43,10 @@ public class Item {
             result += String.valueOf(this.recipeID).hashCode();
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + quantity + ")";
     }
 }

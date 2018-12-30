@@ -37,7 +37,7 @@ public class SearchItems extends Fragment {
     static ArrayList<String> materialList = new ArrayList<>();
     private RecyclerView rv;
     static MyAdapter adapter;
-    EditText searchWindow;
+    static EditText searchWindow;
     Button searchBtn;
 
     public class DownloadResults extends AsyncTask<String, Void, String>{

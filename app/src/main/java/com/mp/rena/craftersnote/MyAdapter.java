@@ -13,9 +13,11 @@ import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -164,6 +166,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                             item.description = desc;
                             item.job = job;
                             item.jobLevel = jobLevel;
+                            Item.reqMaterialList.clear();
+                            for (int i=0; i<10; i++){
+                                int amount = Integer.parseInt(resultJSON.getString("AmountIngredient" + i));
+                                if (amount > 0){
+                                    String materialName = resultJSON.getJSONObject("ItemIngredient" + i).getString("Name");
+                                    String materialUrlType = resultJSON.getString("ItemIngredient" + i + "Target");
+                                    int materialID = Integer.parseInt(resultJSON.getString("ItemIngredient" + i + "TargetID"));
+                                    String materialIcon = resultJSON.getJSONObject("ItemIngredient" + i).getString("Icon");
+                                    String materialUrl = "/" + materialUrlType + "/" + materialID;
+                                    Item materialItem = new Item(materialName, materialID, materialIcon, materialUrl, materialUrlType);
+                                    materialItem.quantity = amount;
+                                    Item.reqMaterialList.add(materialItem);
+                                }
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -209,12 +225,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     jobLevelD.setText("Lv. " + item.jobLevel);
 
                     // required material list in the dialog
-                    ArrayList<String> materialList = new ArrayList<>();
-                    materialList.add("1");
                     ListView listView = layout.findViewById(R.id.requiredMaterialDetail);
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(layout.getContext(),android.R.layout.simple_list_item_1, materialList);
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(layout.getContext(),android.R.layout.simple_list_item_1, Item.reqMaterialList);
                     listView.setAdapter(arrayAdapter);
-
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Item tempItem = Item.reqMaterialList.get(i);
+                            TodaysTask.list.add(tempItem);
+                            TodaysTask.adapter.notifyDataSetChanged();
+                        }
+                    });
                     // Add buttons in the dialog
                     Button todayDBtn = layout.findViewById(R.id.addTodayDialog);
                     Button everyDBtn = layout.findViewById(R.id.addEverydayDialog);
