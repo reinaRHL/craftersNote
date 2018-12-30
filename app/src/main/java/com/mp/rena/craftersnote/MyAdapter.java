@@ -1,19 +1,15 @@
 package com.mp.rena.craftersnote;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +21,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -41,7 +35,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private ArrayList<Item> list;
@@ -226,16 +219,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                     // required material list in the dialog
                     ListView listView = layout.findViewById(R.id.requiredMaterialDetail);
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(layout.getContext(),android.R.layout.simple_list_item_1, Item.reqMaterialList);
+                    ArrayAdapter arrayAdapter = new RequiredMaterialAdapter(layout.getContext(), Item.reqMaterialList);
                     listView.setAdapter(arrayAdapter);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Item tempItem = Item.reqMaterialList.get(i);
-                            TodaysTask.list.add(tempItem);
-                            TodaysTask.adapter.notifyDataSetChanged();
-                        }
-                    });
+
                     // Add buttons in the dialog
                     Button todayDBtn = layout.findViewById(R.id.addTodayDialog);
                     Button everyDBtn = layout.findViewById(R.id.addEverydayDialog);
@@ -327,10 +313,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             textView = itemView.findViewById(R.id.rowTextView);
 
             if (isSearch) {
-                todayBtn = itemView.findViewById(R.id.addTodayBtn);
-                everydayBtn = itemView.findViewById(R.id.addEverydayBtn);
+                todayBtn = itemView.findViewById(R.id.addTodayBtnRM);
+                everydayBtn = itemView.findViewById(R.id.addEverydayBtnRM);
                 detailBtn = itemView.findViewById(R.id.detailBtn);
-                itemIcon = itemView.findViewById(R.id.itemIcon_search);
+                itemIcon = itemView.findViewById(R.id.itemIconRM);
             } else{
                 itemIcon = itemView.findViewById(R.id.itemIcon);
             }
