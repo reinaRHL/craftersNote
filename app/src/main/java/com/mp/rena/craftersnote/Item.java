@@ -1,5 +1,7 @@
 package com.mp.rena.craftersnote;
 
+import java.util.ArrayList;
+
 public class Item {
 
     String name;
@@ -8,12 +10,17 @@ public class Item {
     String description;
     String icon;
     String url;
+    String urlType;
+    String job;
+    String jobLevel;
+    ArrayList<Item> reqMaterialList = new ArrayList<>();
 
-    public Item(String name, int recipeID, String icon, String url) {
+    public Item(String name, int recipeID, String icon, String url, String urlType) {
         this.name = name;
         this.recipeID = recipeID;
         this.icon = icon;
         this.url = url;
+        this.urlType = urlType;
     }
 
     @Override

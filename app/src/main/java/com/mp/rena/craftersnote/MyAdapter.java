@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,18 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private ArrayList<Item> list;
@@ -121,18 +133,89 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.detailBtn.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    DownloadResults download = new DownloadResults();
+                    Item item = new Item("", 0, "", "", "" );
                     AlertDialog.Builder builder;
                     final AlertDialog alertDialog;
                     LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View layout = inflater.inflate(R.layout.dialog_custom_layout, null);
+
+                    if (list.get(position).urlType.equals("Recipe")){
+                        try {
+                            String result = download.execute("https://xivapi.com" + list.get(position).url + "?key=3e1f649be24c4f8bb33b9a42").get();
+                            JSONObject resultJSON = new JSONObject(result);
+                            String url = resultJSON.getString("Url");
+                            int id = Integer.parseInt(resultJSON.getString("ID"));
+
+                            JSONObject itemResultJSON = resultJSON.getJSONObject("ItemResult");
+                            String icon = itemResultJSON.getString("Icon");
+                            String desc = itemResultJSON.getString("Description");
+                            desc = desc.substring(0, desc.indexOf(".")+1);
+                            String name = itemResultJSON.getString("Name");
+
+                            JSONObject classJobJSON = resultJSON.getJSONObject("ClassJob");
+                            String job = classJobJSON.getString("NameEnglish");
+
+                            JSONObject recipeLevelTableJSON = resultJSON.getJSONObject("RecipeLevelTable");
+                            String jobLevel = recipeLevelTableJSON.getString("ClassJobLevel");
+
+                            String urlType = url.split("/")[0];
+                            item = new Item(name, id, icon, url, urlType);
+                            item.description = desc;
+                            item.job = job;
+                            item.jobLevel = jobLevel;
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (list.get(position).urlType.equals("Item")){
+                        try {
+                            String result = download.execute("https://xivapi.com" + list.get(position).url).get();
+                            JSONObject resultJSON = new JSONObject(result);
+                            String url = resultJSON.getString("Url");
+                            int id = Integer.parseInt(resultJSON.getString("ID"));
+                            String icon = resultJSON.getString("Icon");
+                            String name = resultJSON.getString("Name");
+                            String desc = resultJSON.getString("Description");
+                            String jobLevel = resultJSON.getString("LevelItem");
+                            String job = "";
+                            String urlType = url.split("/")[0];
+                            item = new Item(name, id, icon, url, urlType);
+                            item.description = desc;
+                            item.job = job;
+                            item.jobLevel = jobLevel;
+
+                            TextView materialLabel = layout.findViewById(R.id.materialLabel);
+                            materialLabel.setText("");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // create dialog for details
                     builder = new AlertDialog.Builder(context);
                     builder.setView(layout);
                     alertDialog = builder.create();
+
+                    //textviews in the dialog
+                    TextView itemNameD = layout.findViewById(R.id.itemNameDetail);
+                    TextView itemDescD = layout.findViewById(R.id.itemDescDetail);
+                    TextView jobD = layout.findViewById(R.id.requiredClass);
+                    TextView jobLevelD = layout.findViewById(R.id.requiredClassLevel);
+
+                    itemNameD.setText(item.name);
+                    itemDescD.setText(item.description);
+                    jobD.setText(item.job);
+                    jobLevelD.setText("Lv. " + item.jobLevel);
+
+                    // required material list in the dialog
                     ArrayList<String> materialList = new ArrayList<>();
                     materialList.add("1");
                     ListView listView = layout.findViewById(R.id.requiredMaterialDetail);
                     ArrayAdapter arrayAdapter = new ArrayAdapter(layout.getContext(),android.R.layout.simple_list_item_1, materialList);
                     listView.setAdapter(arrayAdapter);
+
+                    // Add buttons in the dialog
                     Button todayDBtn = layout.findViewById(R.id.addTodayDialog);
                     Button everyDBtn = layout.findViewById(R.id.addEverydayDialog);
                     todayDBtn.setOnClickListener(new Button.OnClickListener() {
@@ -232,5 +315,33 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
 
         }
+    }
+
+    public class DownloadResults extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                InputStream in = connection.getInputStream();
+                StringBuilder response = new StringBuilder(50000);
+                char[] buf = new char[2048];
+                int charRead;
+                BufferedReader rd = new BufferedReader(new InputStreamReader(in));
+                while((charRead = rd.read(buf, 0, 2048)) > 0) {
+                    response.append(buf, 0, charRead);
+                }
+
+                return response.toString();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
     }
 }

@@ -10,8 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 public class SearchItems extends Fragment {
 
     static ArrayList<Item> list = new ArrayList<>();
+    static ArrayList<String> materialList = new ArrayList<>();
     private RecyclerView rv;
     static MyAdapter adapter;
     EditText searchWindow;
@@ -70,10 +74,13 @@ public class SearchItems extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search_items, container, false);
+
+//        ListView listView = rootView.findViewById(R.id.requiredMaterialDetail);
+//        ArrayAdapter arrayAdapter = new ArrayAdapter(this.getContext(),android.R.layout.simple_list_item_1, materialList);
+//        listView.setAdapter(arrayAdapter);
 
         rv = rootView.findViewById(R.id.recyclerViewSearch);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -105,7 +112,8 @@ public class SearchItems extends Fragment {
                         int recipeID = Integer.parseInt(recipe.getString("ID"));
                         String icon = recipe.getString("Icon");
                         String url = recipe.getString("Url");
-                        Item item = new Item(itemName, recipeID, icon, url);
+                        String urlType = recipe.getString("UrlType");
+                        Item item = new Item(itemName, recipeID, icon, url, urlType);
                         list.add(item);
                     }
                     adapter.notifyDataSetChanged();
