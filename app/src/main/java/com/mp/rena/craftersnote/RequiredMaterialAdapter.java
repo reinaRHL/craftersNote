@@ -1,6 +1,7 @@
 package com.mp.rena.craftersnote;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ public class RequiredMaterialAdapter extends ArrayAdapter<Item> {
                 if (!TodaysTask.list.contains(currentItem)){
                     TodaysTask.list.add(currentItem);
                     TodaysTask.adapter.notifyDataSetChanged();
+                    MainActivity.db.insertToday(currentItem);
                 }
             }
         });
@@ -65,10 +67,13 @@ public class RequiredMaterialAdapter extends ArrayAdapter<Item> {
                 if (!TodaysTask.list.contains(currentItem)){
                     TodaysTask.list.add(currentItem);
                     TodaysTask.adapter.notifyDataSetChanged();
+                    MainActivity.db.insertToday(currentItem);
                 }
                 if (!ManageTask.list.contains(currentItem)){
                     ManageTask.list.add(currentItem);
                     ManageTask.adapter.notifyDataSetChanged();
+                    MainActivity.db.insertEveryday(currentItem);
+
                 }
 
             }

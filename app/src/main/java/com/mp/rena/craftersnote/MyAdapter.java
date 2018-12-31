@@ -1,6 +1,7 @@
 package com.mp.rena.craftersnote;
 
 import android.app.AlertDialog;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -108,6 +109,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     if (!TodaysTask.list.contains(item)){
                         TodaysTask.list.add(item);
                         TodaysTask.adapter.notifyDataSetChanged();
+                        MainActivity.db.insertToday(item);
                     }
                 }
             });
@@ -118,10 +120,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     if (!TodaysTask.list.contains(item)){
                         TodaysTask.list.add(item);
                         TodaysTask.adapter.notifyDataSetChanged();
+                        MainActivity.db.insertToday(item);
                     }
                     if (!ManageTask.list.contains(item)){
                         ManageTask.list.add(item);
                         ManageTask.adapter.notifyDataSetChanged();
+                        MainActivity.db.insertEveryday(item);
                     }
                 }
             });
@@ -261,8 +265,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        //MainActivity.db.execSQL("DELETE FROM Place WHERE lat =\'" + MainActivity.data.get(position).lat + "\' and lng = \'" + MainActivity.data.get(position).lng + "\' and address = \'" + MainActivity.data.get(position).address + "\';");
-
+                                        MainActivity.db.deleteToday(TodaysTask.list.get(position).name, TodaysTask.list.get(position).id);
                                         TodaysTask.list.remove(position);
                                         TodaysTask.adapter.notifyDataSetChanged();
                                     }
@@ -279,8 +282,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        //MainActivity.db.execSQL("DELETE FROM Place WHERE lat =\'" + MainActivity.data.get(position).lat + "\' and lng = \'" + MainActivity.data.get(position).lng + "\' and address = \'" + MainActivity.data.get(position).address + "\';");
-
+                                        MainActivity.db.deleteEveryDay(ManageTask.list.get(position).name, ManageTask.list.get(position).id);
                                         ManageTask.list.remove(position);
                                         ManageTask.adapter.notifyDataSetChanged();
                                     }

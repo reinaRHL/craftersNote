@@ -3,13 +3,10 @@ package com.mp.rena.craftersnote;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -29,15 +26,12 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.concurrent.ExecutionException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
     private String serverName="";
     TextView profileText;
     ImageView profilePicImageView;
-    SharedPreferences sharedPreferences;
+    static SharedPreferences sharedPreferences;
+    static DatabaseHelper db;
     private final String appkey = "3e1f649be24c4f8bb33b9a42";
     String [] nameSplited;
+    String lastEdited;
 
 
     public class DownloadProfilePicture extends AsyncTask <String, Void, String>{
@@ -137,6 +133,17 @@ public class MainActivity extends AppCompatActivity {
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_container, fragment, "0").commit();
 
+        db = new DatabaseHelper(getApplicationContext());
+        db.populateEFromE();
+
+        lastEdited = sharedPreferences.getString("date", "");
+        if (lastEdited.equals("") || !lastEdited.equals(String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date())))){
+           db.deleteAllToday();
+           db.copyFromEveryToToday();
+        }
+        //populate todays task
+        db.populateTFromT();
+        saveSharedPreference();
 
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -243,5 +250,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void saveSharedPreference(){
+        sharedPreferences.edit().putString("date", String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date()))).apply();
     }
 }
