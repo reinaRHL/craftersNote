@@ -32,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -137,11 +138,14 @@ public class MainActivity extends AppCompatActivity {
         db.populateEFromE();
 
         lastEdited = sharedPreferences.getString("date", "");
-        if (lastEdited.equals("") || !lastEdited.equals(String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date())))){
+        SimpleDateFormat isoFormat = new SimpleDateFormat("MM-dd-yyyy");
+        isoFormat.setTimeZone(TimeZone.getDefault());
+        String date = isoFormat.format(new Date());
+        if (lastEdited.equals("") || !lastEdited.equals(date)){
            db.deleteAllToday();
            db.copyFromEveryToToday();
         }
-        //populate todays task
+        //populate today's task
         db.populateTFromT();
         saveSharedPreference();
 
@@ -253,6 +257,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void saveSharedPreference(){
-        sharedPreferences.edit().putString("date", String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date()))).apply();
+        SimpleDateFormat isoFormat = new SimpleDateFormat("MM-dd-yyyy");
+        isoFormat.setTimeZone(TimeZone.getDefault());
+        String date = isoFormat.format(new Date());
+
+        sharedPreferences.edit().putString("date", date).apply();
     }
 }
