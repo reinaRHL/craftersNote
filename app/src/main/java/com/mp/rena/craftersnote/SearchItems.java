@@ -49,7 +49,16 @@ public class SearchItems extends Fragment {
             try {
                 URL url = new URL(strings[0]);
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                InputStream in = connection.getInputStream();
+                connection.setRequestMethod("GET");
+                InputStream in = null;
+                if (connection.getResponseCode() == 400)
+                {
+                    in = connection.getErrorStream();
+                } else
+                {
+                    in = connection.getInputStream();
+                }
+
                 InputStreamReader reader = new InputStreamReader(in);
                 int data = reader.read();
                 String result="";
@@ -103,7 +112,7 @@ public class SearchItems extends Fragment {
                 String itemList="";
                 String urlString = searchWindow.getText().toString();
                 try {
-                    itemList = download.execute("https://xivapi.com/search?indexes=recipe&string=" + urlString).get();
+                    itemList = download.execute("https://xivapi.com/search?indexes=recipe&string=" + urlString + "&key=3e1f649be24c4f8bb33b9a42").get();
                     JSONObject itemListJSON = new JSONObject(itemList);
                     String results = itemListJSON.getString("Results");
                     JSONArray resultsArr = new JSONArray(results);
