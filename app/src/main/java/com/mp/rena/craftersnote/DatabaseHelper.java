@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private ArrayList<Item> list = new ArrayList<>();
 
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
@@ -34,12 +37,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Table Create Statements
     // Today table create statement
     private static final String CREATE_TABLE_TODAY = "CREATE TABLE "
-            + TABLE_TODAY + "(" + KEY_NAME + " TEXT," + KEY_ID + " INTEGER," + KEY_ICON
+            + TABLE_TODAY + "(" + KEY_NAME + " TEXT," + KEY_ID + " INTEGER UNIQUE," + KEY_ICON
             + " TEXT," + KEY_URL + " TEXT," + KEY_URLTYPE + " TEXT" + ")";
 
     // Everyday table create statement
     private static final String CREATE_TABLE_EVERYDAY = "CREATE TABLE "
-            + TABLE_EVERYDAY + "(" + KEY_NAME + " TEXT," + KEY_ID + " INTEGER," + KEY_ICON
+            + TABLE_EVERYDAY + "(" + KEY_NAME + " TEXT," + KEY_ID + " INTEGER UNIQUE," + KEY_ICON
             + " TEXT," + KEY_URL + " TEXT," + KEY_URLTYPE + " TEXT" + ")";
 
     public DatabaseHelper(Context context) {
@@ -102,7 +105,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(deleteQ);
     }
 
-
     //copy all from everyday to today
     public void copyFromEveryToToday() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -113,7 +115,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     // populate everyday list from everyday table
-    public void populateEFromE(){
+    public ArrayList<Item> populateEFromE(){
+        list.clear();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM "+ TABLE_EVERYDAY, null);
         int nameIndex = c.getColumnIndex("name");
@@ -130,13 +133,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String url = c.getString(urlIndex);
                 String urlType = c.getString(urlTypeIndex);
                 Item itemPopulate = new Item(name, id, icon, url, urlType);
-                ManageTask.list.add(itemPopulate);
+                list.add(itemPopulate);
             } while(c.moveToNext());
         }
+        return list;
     }
 
     // populate today list from today table
-    public void populateTFromT(){
+    public ArrayList<Item> populateTFromT(){
+        list.clear();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM "+ TABLE_TODAY, null);
         int nameIndex = c.getColumnIndex("name");
@@ -153,9 +158,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String url = c.getString(urlIndex);
                 String urlType = c.getString(urlTypeIndex);
                 Item itemPopulate = new Item(name, id, icon, url, urlType);
-                TodaysTask.list.add(itemPopulate);
+                list.add(itemPopulate);
             } while(c.moveToNext());
         }
+        return list;
     }
 
     @Override

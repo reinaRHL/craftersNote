@@ -19,9 +19,9 @@ import java.util.ArrayList;
 public class RecordSales extends Fragment {
 
 
-    static ArrayList<Item> list = new ArrayList<>();
+    private ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
-    static MyAdapter adapter;
+    private MyAdapter adapter;
 
     public RecordSales() {
         // Required empty public constructor

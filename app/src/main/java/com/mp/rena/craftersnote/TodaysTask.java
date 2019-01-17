@@ -25,9 +25,9 @@ import java.util.ArrayList;
  */
 public class TodaysTask extends Fragment {
 
-    static ArrayList<Item> list = new ArrayList<>();
+    private ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
-    static MyAdapter adapter;
+    private MyAdapter adapter;
     ImageButton addBtn;
     public TodaysTask() {
         // Required empty public constructor
@@ -43,7 +43,7 @@ public class TodaysTask extends Fragment {
 
         rv = rootView.findViewById(R.id.recyclerViewToday);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        list = MainActivity.db.populateTFromT();
         adapter = new MyAdapter(this.getContext(), list);
         rv.setAdapter(adapter);
 

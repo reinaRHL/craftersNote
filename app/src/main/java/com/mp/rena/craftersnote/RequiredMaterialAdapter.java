@@ -53,29 +53,15 @@ public class RequiredMaterialAdapter extends ArrayAdapter<Item> {
         addToday.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TodaysTask.list.contains(currentItem)){
-                    TodaysTask.list.add(currentItem);
-                    TodaysTask.adapter.notifyDataSetChanged();
-                    MainActivity.db.insertToday(currentItem);
-                }
+               MainActivity.db.insertToday(currentItem);
             }
         });
 
         addEveryDay.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TodaysTask.list.contains(currentItem)){
-                    TodaysTask.list.add(currentItem);
-                    TodaysTask.adapter.notifyDataSetChanged();
-                    MainActivity.db.insertToday(currentItem);
-                }
-                if (!ManageTask.list.contains(currentItem)){
-                    ManageTask.list.add(currentItem);
-                    ManageTask.adapter.notifyDataSetChanged();
-                    MainActivity.db.insertEveryday(currentItem);
-
-                }
-
+                MainActivity.db.insertToday(currentItem);
+                MainActivity.db.insertEveryday(currentItem);
             }
         });
 

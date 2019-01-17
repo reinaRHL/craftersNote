@@ -106,27 +106,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 @Override
                 public void onClick(View view) {
                     Item item = list.get(position);
-                    if (!TodaysTask.list.contains(item)){
-                        TodaysTask.list.add(item);
-                        TodaysTask.adapter.notifyDataSetChanged();
-                        MainActivity.db.insertToday(item);
-                    }
+                    MainActivity.db.insertToday(item);
                 }
             });
             holder.everydayBtn.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Item item = list.get(position);
-                    if (!TodaysTask.list.contains(item)){
-                        TodaysTask.list.add(item);
-                        TodaysTask.adapter.notifyDataSetChanged();
-                        MainActivity.db.insertToday(item);
-                    }
-                    if (!ManageTask.list.contains(item)){
-                        ManageTask.list.add(item);
-                        ManageTask.adapter.notifyDataSetChanged();
-                        MainActivity.db.insertEveryday(item);
-                    }
+                    MainActivity.db.insertToday(item);
+                    MainActivity.db.insertEveryday(item);
                 }
             });
             holder.detailBtn.setOnClickListener(new Button.OnClickListener() {
@@ -265,9 +253,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        MainActivity.db.deleteToday(TodaysTask.list.get(position).name, TodaysTask.list.get(position).id);
-                                        TodaysTask.list.remove(position);
-                                        TodaysTask.adapter.notifyDataSetChanged();
+                                        MainActivity.db.deleteToday(list.get(position).name, list.get(position).id);
+                                        list.remove(position);
+                                        notifyDataSetChanged();
                                     }
                                 })
                                 .setNegativeButton("Cancel", null)
@@ -282,9 +270,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        MainActivity.db.deleteEveryDay(ManageTask.list.get(position).name, ManageTask.list.get(position).id);
-                                        ManageTask.list.remove(position);
-                                        ManageTask.adapter.notifyDataSetChanged();
+                                        MainActivity.db.deleteEveryDay(list.get(position).name, list.get(position).id);
+                                        list.remove(position);
+                                        notifyDataSetChanged();
                                     }
                                 })
                                 .setNegativeButton("Cancel", null)

@@ -27,17 +27,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.net.ssl.HttpsURLConnection;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SearchItems extends Fragment {
 
-    static ArrayList<Item> list = new ArrayList<>();
-    static ArrayList<String> materialList = new ArrayList<>();
+    private ArrayList<Item> list = new ArrayList<>();
+    //static ArrayList<String> materialList = new ArrayList<>();
     private RecyclerView rv;
-    static MyAdapter adapter;
-    static EditText searchWindow;
+    private MyAdapter adapter;
+    private EditText searchWindow;
     Button searchBtn;
 
     public class DownloadResults extends AsyncTask<String, Void, String>{

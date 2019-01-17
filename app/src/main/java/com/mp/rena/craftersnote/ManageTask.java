@@ -1,7 +1,6 @@
 package com.mp.rena.craftersnote;
 
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,8 +14,6 @@ import android.widget.ImageButton;
 
 import java.util.ArrayList;
 
-import static com.mp.rena.craftersnote.TodaysTask.list;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,9 +24,9 @@ public class ManageTask extends Fragment {
         // Required empty public constructor
     }
 
-    static ArrayList<Item> list = new ArrayList<>();
+    private ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
-    static MyAdapter adapter;
+    private MyAdapter adapter;
     ImageButton addBtn;
 
     @Override
@@ -42,7 +39,7 @@ public class ManageTask extends Fragment {
 
         rv = rootView.findViewById(R.id.recyclerViewManage);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        list = MainActivity.db.populateEFromE();
         adapter = new MyAdapter(this.getContext(), list);
         rv.setAdapter(adapter);
 

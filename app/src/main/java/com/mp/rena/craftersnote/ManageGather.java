@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 public class ManageGather extends Fragment {
 
-    static ArrayList<Item> list = new ArrayList<>();
+    private ArrayList<Item> list = new ArrayList<>();
     private RecyclerView rv;
-    static MyAdapter adapter;
+    private MyAdapter adapter;
 
     public ManageGather() {
         // Required empty public constructor

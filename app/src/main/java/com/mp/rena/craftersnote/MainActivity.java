@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             setProfile();
         }
 
-        // initial setting for bottom Navigation. inflate using navigaton xml
+        // initial setting for bottom Navigation. inflate using navigation xml
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.inflateMenu(R.menu.bottom_menu);
 
@@ -135,18 +135,20 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.main_container, fragment, "0").commit();
 
         db = new DatabaseHelper(getApplicationContext());
-        db.populateEFromE();
+        //db.populateEFromE();
 
         lastEdited = sharedPreferences.getString("date", "");
         SimpleDateFormat isoFormat = new SimpleDateFormat("MM-dd-yyyy");
         isoFormat.setTimeZone(TimeZone.getDefault());
         String date = isoFormat.format(new Date());
+
+        // if lastEdited date is empty or lastEdited date is not equal to today, we want to reset today's list with everyday task
         if (lastEdited.equals("") || !lastEdited.equals(date)){
            db.deleteAllToday();
            db.copyFromEveryToToday();
         }
         //populate today's task
-        db.populateTFromT();
+        //db.populateTFromT();
         saveSharedPreference();
 
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
