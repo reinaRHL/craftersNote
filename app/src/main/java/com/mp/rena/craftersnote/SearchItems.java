@@ -89,10 +89,6 @@ public class SearchItems extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search_items, container, false);
 
-//        ListView listView = rootView.findViewById(R.id.requiredMaterialDetail);
-//        ArrayAdapter arrayAdapter = new ArrayAdapter(this.getContext(),android.R.layout.simple_list_item_1, materialList);
-//        listView.setAdapter(arrayAdapter);
-
         rv = rootView.findViewById(R.id.recyclerViewSearch);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
 

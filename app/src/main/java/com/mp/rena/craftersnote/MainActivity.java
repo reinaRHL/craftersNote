@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.deleteAll){
-
+            // delete all items from the list
         } else if (item.getItemId() == R.id.profileChange){
            setProfile();
         }
@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.main_container, fragment, "0").commit();
 
         db = new DatabaseHelper(getApplicationContext());
-        //db.populateEFromE();
 
         lastEdited = sharedPreferences.getString("date", "");
         SimpleDateFormat isoFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -147,8 +146,7 @@ public class MainActivity extends AppCompatActivity {
            db.deleteAllToday();
            db.copyFromEveryToToday();
         }
-        //populate today's task
-        //db.populateTFromT();
+
         saveSharedPreference();
 
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
